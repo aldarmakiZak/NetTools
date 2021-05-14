@@ -1,0 +1,7 @@
+{
+ "ls": "test.txt", 
+ "cd": "bash: cd: : Permission denied",
+ "pwd": "/home/myserver",
+ "cat test.txt" : "THIS IS A FAKE SERVER :)",
+ "rm": "be polite.. this is not your server"  
+}
