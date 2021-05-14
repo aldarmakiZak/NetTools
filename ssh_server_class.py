@@ -1,5 +1,6 @@
-#TO DO 
-#
+# code redesigned from source: https://github.com/ysc3839/FakeSSHServer/blob/master/FakeSSHServer.py
+# TO DO 
+# 
 # - add comments - 
 # - commands and responses - 
 # - add ascii art -  
@@ -20,6 +21,7 @@ with open("ssh_commands","r") as file:
     commands_dict = json.load(file)
 
 print(commands_dict)
+
 def add_logger(name, logfile):
     logger = logging.getLogger(name)
     logger.setLevel(logging.INFO)
