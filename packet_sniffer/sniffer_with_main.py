@@ -1,3 +1,11 @@
+###############################################################
+#
+#
+#
+#
+#
+#
+################################################################
 from scapy.all import *
 import socket
 import argparse
@@ -79,7 +87,7 @@ if __name__=="__main__":
     parser.add_argument("--interface", action="store",default=None, type=str, help="Network interface to listen on.")
     parser.add_argument("--count", action="store",default=0, type=int, help="Number of captured packets")
     parser.add_argument("--output", action="store", type=str,default="sniffed.pcap", help="File name to output the captured packets.")
-    parser.add_argument("--protocol", action="store", type=str, help="Specify a protocol to listen for.")
+    parser.add_argument("--protocol", action="store", type=str, help="Specify a protocol to listen for.(Support (TCP, UDP, ICMP, HTTP/S, DNS, FTP) )")
     parser.add_argument("--src", action="append", help="Packet source IP.")
     parser.add_argument("--dst", action="append", help="Packet destination IP.")
     parser.add_argument("--filter_file", action="store", type=str, help="File name to get filter from.")
@@ -87,4 +95,3 @@ if __name__=="__main__":
     args = parser.parse_args()
     # Starting main
     main(**vars(args))
-
