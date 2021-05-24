@@ -2,6 +2,7 @@ import socket
 import threading
 import logging
 import time
+import argparse
 
 
 # function to format logs
@@ -29,7 +30,7 @@ class FTPthread(threading.Thread):
 		threading.Thread.__init__(self)
 
 	def run(self):
-		print(f"received connection from {self.addr}")
+		print(f"[] Received connection from {self.addr}")
 		# send server version 
 		self.conn.send('220 (vsFTPd 3.0.3)\r\n'.encode())
 
@@ -40,8 +41,8 @@ class FTPthread(threading.Thread):
 				try:
 					if not command:
 						break
-					else:
-						print(command)
+					#else:
+						#print(command)
 
 					# if the client wants to login
 					if "USER" in command:
@@ -52,7 +53,7 @@ class FTPthread(threading.Thread):
 					# to log the passord that a clients tries to send
 					elif "PASS" in command and loggedin:
 						password = command[4:].strip()
-						print(f"login attempt from user: {username} , password {password}")
+						print(f"[] Login attempt from user: {username} , password {password}")
 
 						# log the password when the client input it
 						conn_logger.info(f" Connection from {self.addr} with credintials\t {username}:\t{password}") 	
@@ -61,7 +62,7 @@ class FTPthread(threading.Thread):
 					
 					elif "QUIT" in command:
 						self.conn.send("221 Goodbye.\r\n".encode())
-
+						print(f"[] Client {self.addr} disconnecet ")
 					# the client will never log in successfully... (further developmet will be allowing the client to login and execute commands)
 					else:
 						# log the commands that client send
@@ -69,11 +70,11 @@ class FTPthread(threading.Thread):
 						self.conn.send("530 Please login with USER and PASS.\r\n".encode())
 					
 				except Exception as e:
-					print("error")
+					print("[] Error")
 					print(e)
 
 		except Exception as e:
-			print(f"client {self.addr} disconnecet ")
+			print(f"[] Client {self.addr} disconnecet ")
 			
 
 # class to start the server sockets
@@ -89,14 +90,15 @@ class FTPserver(threading.Thread):
 
 	# function to start the listener and thread
 	def run(self):
+		print("[] Starting FTP Honeypot....")
 		self.my_socket.listen(5)
 		try:
 			while True:
 				conn, addr = self.my_socket.accept()
 				# pass the accepted connections to the client handler
-				thread = FTPthread(conn, addr)
-				thread.start()
-				
+				self.thread = FTPthread(conn, addr)
+				self.thread.start()
+
 		except KeyboardInterrupt:
 			exit(1)
 	
@@ -105,5 +107,20 @@ class FTPserver(threading.Thread):
 
 if __name__=="__main__":
 
-	serv = FTPserver("localhost",5555)
-	serv.start()
+	parser = argparse.ArgumentParser(description="FTP honeypot. Record malicious activitied ")
+	parser.add_argument("--address", action="store", default="localhost",type=str, help="IP address to listen on")
+	parser.add_argument("--port", action="store", default=2121,type=int, help="Port number to listen on")
+
+	args = parser.parse_args()
+	addr = args.address
+	port = args.port
+	
+	try:
+		serv = FTPserver(addr,port)
+		serv.start()
+
+	except Exception as e:
+		print("[] Error: ")
+		serv.stop()
+		print(e)
+		exit(1)
