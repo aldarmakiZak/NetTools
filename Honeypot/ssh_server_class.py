@@ -187,7 +187,7 @@ class SSHthread():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="FTP honeypot. Record malicious activitied ")
     parser.add_argument("--address", action="store", default="localhost",type=str, help="IP address to listen on")
-    parser.add_argument("--port", action="store", default=2121,type=int, help="Port number to listen on")
+    parser.add_argument("--port", action="store", default=2222,type=int, help="Port number to listen on")
 
     args = parser.parse_args()
     addr = args.address

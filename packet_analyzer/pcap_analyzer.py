@@ -1,9 +1,6 @@
-#############################################################
-#
-#
-#
-#
-###############################################################
+# Program to analyse pcap files
+# Usage: 
+
 
 from pandas.io.formats import style
 from scapy.all import *
@@ -16,12 +13,12 @@ import argparse
 
 
 # set pandas display options
-pandas.set_option("display.max_columns",None)
-pandas.set_option("display.max_rows",None)
+#pandas.set_option("display.max_columns",31)
+#pandas.set_option("display.max_rows",100)
 
 # set graph plotting options
-sns.set()
-sns.set_theme(style="ticks", color_codes=True)
+#sns.set()
+#sns.set_theme(style="ticks", color_codes=True)
 
 
 # function to create data frames from the pcap file
@@ -160,75 +157,99 @@ if __name__=="__main__":
         print("\t**********************************************\n")
     
     #program loop
-    #while True:
-        try:
-            
-            # print the options the user can choose from
-            print(f"Imported pcap file with: {str(len(df.index))} packets")
-            print("Options: ")
-            print("\t 1- Display all packets\n\t 2- Display packets from specific source ip \n\t 3- Display packets with specific destination ip \n\t 4- Statistics")
-            option = int(input("Choose option: "))
-            important_col = ['id','timestamp','src_mac','dst_mac','len','id','ttl','src','sport','dst','dport','flags','payload_len']
-            
-            # user options handling 
-            if option == 1:
-                print(df.iloc[100])
-            
-            elif option == 2:
-                available_src = df['src'].unique()
-                print("Source IP list:\n", available_src)
+        while True:
+            try:
+                
+                # print the options the user can choose from
+                print(f"Imported pcap file with: {str(len(df.index))} packets")
+                print("Options: ")
+                print("\t 1- Display all packets\n\t 2- Display packets from specific source ip \n\t 3- Display packets with specific destination ip \n\t 4- Statistics \n\t 5- Exit")
+                option = int(input("Choose option: "))
+                
+                # important columns in the packet dataframe
+                important_col = ['id','timestamp','src_mac','dst_mac','len','id','ttl','src','sport','dst','dport','flags','payload_len']
+                
+                # user options handling 
+                if option == 1:
+                    print(df[important_col])
+                    time.sleep(0.5)
+                
+                elif option == 2:
+                    # get the source ip address from the dataframe
+                    available_src = df['src'].unique()
+                    print("Source IP list:\n", available_src)
 
-                ip = input("\nChoose source ip address: ")
+                    ip = input("\nChoose source ip address: ")
+                    
+                    if ip in available_src:
+                        srcdata = df.get(df['src'] ==ip)
+                        print(srcdata[important_col])
+                        continue
+                    else:
+                        print("Invalid Ip address")
+                        exit(1)
                 
-                if ip in available_src:
-                    srcdata = df.get(df['src'] ==ip)
-                    print(srcdata[important_col])
-                    #continue
-                
-                else:
-                    print("Invalid Ip address")
+                elif option == 3:
+                    available_src = df['dst'].unique()
+                    print("Source IP list:\n", available_src)
+
+                    ip = input("\nChoose destination ip address: ")
+                    
+                    if ip in available_src:
+                        srcdata = df.get(df['dst'] ==ip)
+                        print(srcdata[important_col])
+                        continue                
+                    else:
+                        print("Invalid Ip address")
+                        exit(1)
+
+                elif option == 5:
+                    print("[] Exiting")
                     exit(1)
 
-            elif option == 4:
-                print("\t\t4.1 Show summary of the pcap\n\t\t4.2- Display top 5 source ip addresses\n\t\t4.3- Display top 5 distinations\n\t\t4.4- Payload-Time graph \n\t\t4.5 Source-Destination packets count graph\n\t\t4.6 source port-Payload graph\n\t\t4.7 destination port-Payload graph\n")
-                option1 = input("Choose option: ")
+
+                elif option == 4:
+                    print("\t\t4.1 Show summary of the pcap\n\t\t4.2- Display top 5 source ip addresses\n\t\t4.3- Display top 5 distinations\n\t\t4.4- Payload-Time graph \n\t\t4.5 Source-Destination packets count graph\n\t\t4.6 source port-Payload graph\n\t\t4.7 destination port-Payload graph\n")
+                    option1 = input("Choose option: ")
+                    
+                    if option1 == str("4.1"):
+                        pcap_summary(df)
+
+                    elif option1 == str("4.2"):
+                        print("Top 5 source ip addresses are: ")
+                        print(df.value_counts(['src']).head())
+
+                    elif option1 == str("4.3"):
+                        print("Top 5 destination ip addresses are: ")
+                        print(df.value_counts(['dst']).head())
+
+                    elif option1 == str("4.4"):
+                        # group the data by the timestamp (each second) and sum the payload length 
+                        s = df.groupby("timestamp")["payload_len"].sum()
+                        # plot the gragh using matplotlib
+                        s.plot(kind="line",title='Data exchanged over time')
+                        plt.show()
+
+                    elif option1 == str("4.5"):
+                        s = df.groupby(["src","dst"])["payload"].size()
+                        s.plot(kind = "barh")
+                        plt.show()
+
+                    elif option1 == str("4.6"):
+                        s = df.groupby("sport")["payload_len"].sum()
+                        s.plot(kind="bar",title=' Top source ports used')
+                        plt.show()
+
+                    elif option1 == str("4.7"):
+                        s = df.groupby("dport")["payload_len"].sum()
+                        s.plot(kind="bar",title=' Top destination ports visited')
+                        plt.show()
+
+                    else:
+                        print("Invalid option")
+
+            # exit if user press ctrl-c            
+            except KeyboardInterrupt:
                 
-                if option1 == str("4.1"):
-                    pcap_summary(df)
-
-                elif option1 == str("4.2"):
-                    print("Top 5 source ip addresses are: ")
-                    print(df.value_counts(['src']).head())
-
-                elif option1 == str("4.3"):
-                    print("Top 5 destination ip addresses are: ")
-                    print(df.value_counts(['dst']).head())
-
-                elif option1 == str("4.4"):
-                    s = df.groupby("timestamp")["payload_len"].sum()
-                    s.plot(kind="line",title='Data exchanged over time')
-                    plt.show()
-
-                elif option1 == str("4.5"):
-                    s = df.groupby(["src","dst"])["payload"].size()
-                    s.plot(kind = "barh")
-                    plt.show()
-
-                elif option1 == str("4.6"):
-                    s = df.groupby("sport")["payload_len"].sum()
-                    s.plot(kind="bar",title=' Top source ports used')
-                    plt.show()
-
-                elif option1 == str("4.7"):
-                    s = df.groupby("dport")["payload_len"].sum()
-                    s.plot(kind="bar",title=' Top destination ports visited')
-                    plt.show()
-
-                else:
-                    print("Invalid option")
-
-        # exit if user press ctrl-c            
-        except KeyboardInterrupt:
-            
-            print("[+]Exiting")
-            exit(1)
+                print("[+]Exiting")
+                exit(1)
