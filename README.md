@@ -1,20 +1,20 @@
 # Network Security tools #
-## Honeypot (python)
+## Honeypot (Python)
     * SSH simulation
 
     * FTP simulation
 
-## Denial of Service attacker (c or c++)
+## Denial of Service attacker (C)
     * TCP-SYN Flood
 
     * ICMP Flood
 
     * Smurf Attack
     
-## Packet sniffer (c or python)
+## Packet sniffer ( Python)
     * Network packets sniffing 
 
-## Packer analyzer (python)
+## Packer analyzer (Python)
     * Display pcap
   
     * Network packets statistics
