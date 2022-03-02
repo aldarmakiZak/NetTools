@@ -1,6 +1,0 @@
-2021-05-24 00:50:33,510 - command - INFO -  host from <socket.socket fd=9, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5555), raddr=('127.0.0.1', 43958)> sent command SYST
-
-2021-05-24 00:50:36,202 - command - INFO -  host from <socket.socket fd=9, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5555), raddr=('127.0.0.1', 43958)> sent command PORT 127,0,0,1,158,205
-
-2021-05-24 00:50:41,516 - command - INFO -  host from <socket.socket fd=9, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 5555), raddr=('127.0.0.1', 43958)> sent command CWD .
-

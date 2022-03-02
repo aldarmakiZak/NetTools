@@ -1,3 +1,7 @@
+# Program that simulates a low interaction FTP sever
+# Usage: " $python3 ftp_pot --address {bind address} --port {bind port} " default settings (localhost, 2121)
+# Terminate with ctrl-c (it causes lock.acquire() Exception before termination )
+
 import socket
 import threading
 import logging

@@ -1,4 +1,0 @@
-2021-05-14 23:06:56,727 - command - INFO -  host from IPv4Address(type='TCP', host='127.0.0.1', port=51964) sent command b'USER'
-2021-05-14 23:06:58,774 - command - INFO -  host from IPv4Address(type='TCP', host='127.0.0.1', port=51964) sent command b'PASS'
-2021-05-14 23:06:58,774 - command - INFO -  host from IPv4Address(type='TCP', host='127.0.0.1', port=51964) sent command b'SYST'
-2021-05-14 23:07:03,515 - command - INFO -  host from IPv4Address(type='TCP', host='127.0.0.1', port=51964) sent command b'QUIT'

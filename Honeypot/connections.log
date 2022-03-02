@@ -1,7 +1,0 @@
-2021-05-14 07:38:59,212 - connections - INFO -  Connection from ('10.0.2.15', 38400) with credintials	 root:	toor
-2021-05-14 07:40:46,083 - Connection attempt - INFO -  Connection from ('10.0.2.15', 38432) with credintials	 root:	asss
-2021-05-14 07:40:51,537 - Connection attempt - INFO -  Connection from ('10.0.2.15', 38432) with credintials	 root:	toor
-2021-05-14 07:56:34,590 - Connection attempts - INFO -  Connection from ('10.0.2.15', 38612) with credintials	 root:	toor
-2021-05-14 07:57:44,287 - Connection attempts - INFO -  Connection from ('10.0.2.15', 38632) with credintials	 root:	toor
-2021-05-14 09:44:29,345 - Connection attempts - INFO -  Connection from ('10.0.2.15', 38910) with credintials	 root:	toor
-2021-05-14 09:45:30,132 - Connection attempts - INFO -  Connection from ('10.0.2.15', 38924) with credintials	 root:	toor

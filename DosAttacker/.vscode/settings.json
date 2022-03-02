@@ -1,9 +1,0 @@
-{
-    "files.associations": {
-        "tcp.h": "c",
-        "socket.h": "c",
-        "ip.h": "c",
-        "internet": "c",
-        "netfwd": "c"
-    }
-}

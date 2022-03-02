@@ -1,11 +1,9 @@
+# program to simulate SSH server with low inetacitons
+# Usage: "$python3 ssh_pot --address {bind address} --port {bind port} " default settings (localhost, 2222)
+# Termination is done using crtl-c 
 # code redesigned from source: https://github.com/ysc3839/FakeSSHServer/blob/master/FakeSSHServer.py
 # 
-# 
-#  
-# 
-#   
-#
-#
+
 
 
 import logging
@@ -18,13 +16,11 @@ import json
 import argparse
 from paramiko.channel import ChannelStderrFile
 
-# The server encryption key
-host_key = paramiko.RSAKey(filename='./test.pem')
 # paramiko logs file
 #paramiko.util.log_to_file("log.log")
 
-# get the commands that the server can response to, from a json file (You can as much commands and responses as you wnat)
-with open("ssh_commands","r") as file:
+# get the commands that the server can response to, from a json file (You can add as much commands and responses as you wnat)
+with open("./ssh_commands","r") as file:
     commands_dict = json.load(file)
 
 print(commands_dict)
@@ -125,21 +121,24 @@ class SSHthread():
                 client_command = ""
                 # receive the characters byte by byte
                 while not client_command.endswith("\r"):
-
+                    # command receive from the client
                     connection = channel.recv(1024)
                     channel.send(connection)
 
                     # add the letters to one sting
                     client_command += connection.decode("UTF-8")    
-
+                # send a new line to the client
                 channel.send("\r\n")
 
                 client_command = client_command.rstrip() #remove white space
                 interaction_log.info(f" {addr} sent the command: $ {client_command}")
 
+                # exit if the client want to
                 if client_command == "exit":
+                    channel.close()
                     connected = False
 
+                # if the command is in the dictionary list
                 elif client_command in commands_dict:
                     channel.send(f"{commands_dict[client_command]}\r\n")
 
@@ -148,15 +147,16 @@ class SSHthread():
 
         except Exception as ex:
             print("[] Error")
-            print(ex)
+            #print(ex)
             try:
                 connection.close()
 
             except Exception as ex:
-                print(ex)
+                print("[] Connecection error occurred ")
+                #print(ex)
 
 
-        channel.close()
+        #channel.close()
         print(f"[] Connection from {addr} closed")
 
     # socket and thread starting handler function
@@ -169,6 +169,7 @@ class SSHthread():
 
         while True:
             try:
+                # listen for 100 connections
                 sock.listen(100)
                 client, addr = sock.accept()
                 print("[] Connection received from address: {}".format(addr))
@@ -178,8 +179,9 @@ class SSHthread():
                 sys.exit(0)
 
             except Exception as ex:
+                print("[] Socket Error occurred")
                 print(ex)
-
+            # start a new thread with the ssh handler function to handle client connection
             new_client = threading.Thread(target=self.ssh_handler, args=(client, addr))
             new_client.start()
 
@@ -188,10 +190,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="FTP honeypot. Record malicious activitied ")
     parser.add_argument("--address", action="store", default="localhost",type=str, help="IP address to listen on")
     parser.add_argument("--port", action="store", default=2222,type=int, help="Port number to listen on")
-
+    parser.add_argument("--key", action="store", default="test.pem",type=str, help="The server privatr RSA key in pem format (default is test,pem)")
     args = parser.parse_args()
     addr = args.address
     port = args.port
+    keyfile = args.key
+    host_key = paramiko.RSAKey(filename=keyfile)
     #start the server
     try:
         SSHthread().run_server(addr, port)
