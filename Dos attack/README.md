@@ -1,4 +1,4 @@
-# Denial of Service Attack Tool (**DO NOT USE IT AGAINST UNAUTORISED SERVICES**)
+# Denial of Service Attack Tool (**DO NOT USE IT AGAINST UNAUTHORISED SERVICES**)
 
 ## Supported attacks:
     - TCP-SYN Flood
